@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Signin from './home/Signin'
+import PrivateRoute from './Redux/PrivateRoute'
+import SignUp from "./home/Siginup";
+import Header from "./components/header/index";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment >
+      <Router>
+        <Routes>
+          <Route path="/Signin" element={<Signin />} />
+          <Route path="/Signup" element={<SignUp />} />
+          <Route path="/*" element={<Header />} />
+          <Route element={<PrivateRoute />}>
+            {/* <Route path="/home/*" element={<Header />} /> */}
+          </Route>
+        </Routes>
+      </Router>
+    </React.Fragment>
   );
 }
 
