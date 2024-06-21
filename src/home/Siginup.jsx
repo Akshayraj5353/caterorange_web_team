@@ -10,6 +10,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import Googlesignin from './googlesignin';
 import { useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+
 
 function Copyright(props) {
     return (
@@ -49,7 +51,7 @@ export default function SignUp() {
             confirm_password: data.get('confirmPassword'),
             firstname: data.get('firstName'),
             //   address: data.get('address'),
-            //   phone_number: data.get('phonenumber'),
+              phone_number: data.get('phonenumber'),
             lastname: data.get('lastName'),
             role_id: 1
         };
@@ -113,7 +115,7 @@ export default function SignUp() {
                                     autoComplete="family-name"
                                 />
                             </Grid>
-                            {/* <Grid item xs={12}>
+                            <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
@@ -122,7 +124,7 @@ export default function SignUp() {
                                     id="phonenumber"
                                     autoComplete="new-phonenumber"
                                 />
-                            </Grid> */}
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     required
@@ -197,16 +199,16 @@ export default function SignUp() {
                             Sign Up
                         </Button>
 
-                        {/* <Googlesignin /> */}
+                        <Googlesignin />
 
                         {/* <GoogleLogin
-                onSuccess={credentialResponse => {
-                    console.log(credentialResponse);
-                }}
-                onError={() => {
-                    console.log('Login Failed');
-                }}
-            /> */}
+                            onSuccess={credentialResponse => {
+                                console.log(credentialResponse);
+                            }}
+                            onError={() => {
+                                console.log('Login Failed');
+                            }}
+                        /> */}
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link href="/Signin" variant="body2">

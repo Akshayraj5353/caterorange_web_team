@@ -4,13 +4,20 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import store from './Redux/store'
+import store from './Redux/store';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import CartProvider from '../src/components/supriya/Cartcontext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+
     <Provider store={store}>
-      <App />
+      <GoogleOAuthProvider clientId="711298105373-5l0qn2f5oa1hnih8shaqot81frpj958f.apps.googleusercontent.com">
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </GoogleOAuthProvider>
 
     </Provider>
   </React.StrictMode>
