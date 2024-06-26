@@ -10,10 +10,10 @@ import PrivateRoute from './Redux/PrivateRoute'
 import SignUp from "./Screens/login/Siginup";
 import Header from "./components/header/index";
 
-
-function App() {
+ 
+function App() { 
   return (
-    <React.Fragment >
+    <React.Fragment > 
       <Router>
         <Routes>
           <Route path="/Signin" element={<Signin />} />

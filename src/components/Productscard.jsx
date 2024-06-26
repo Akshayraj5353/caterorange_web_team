@@ -51,13 +51,13 @@ const ProductCard = () => {
 
   const scrollLeft = (ref) => {
     if (ref.current) {
-      ref.current.scrollBy({ left: -320, behavior: 'smooth' });
+      ref.current.scrollBy({ left: -320, behavior: "smooth" });
     }
   };
 
   const scrollRight = (ref) => {
     if (ref.current) {
-      ref.current.scrollBy({ left: 320, behavior: 'smooth' });
+      ref.current.scrollBy({ left: 320, behavior: "smooth" });
     }
   };
   const handleAddToCart = () => {
@@ -191,7 +191,10 @@ const ProductCard = () => {
         <Typography variant="h6">Lunch & Dinner</Typography>
       </Box>
       <Box>
-        <Typography sx={{ textAlign: "center", my: 4, backgroundColor: "#f0f0f0" }} variant="h4">
+        <Typography
+          sx={{ textAlign: "center", my: 4, backgroundColor: "#f0f0f0" }}
+          variant="h4"
+        >
           Event Orders
         </Typography>
         <Typography
@@ -211,7 +214,6 @@ const ProductCard = () => {
         <Box
           sx={{ position: "relative", display: "flex", alignItems: "center" }}
         >
-
           <IconButton
             sx={{ position: "absolute", left: 0, zIndex: 1 }}
             onClick={() => scrollLeft(foodScrollContainerRef)}
@@ -226,10 +228,8 @@ const ProductCard = () => {
               gap: 2,
               padding: 2,
               backgroundColor: "#f0f0f0",
-
             }}
           >
-
             {products.map((product) => (
               <Card key={product.id} sx={{ minWidth: 300 }}>
                 <CardMedia
@@ -367,7 +367,10 @@ const ProductCard = () => {
         </Box>
 
         <Box>
-          <Typography sx={{ textAlign: "center", my: 4, backgroundColor: "#f0f0f0" }} variant="h4">
+          <Typography
+            sx={{ textAlign: "center", my: 4, backgroundColor: "#f0f0f0" }}
+            variant="h4"
+          >
             Corporate Orders
           </Typography>
           <Typography
@@ -387,7 +390,6 @@ const ProductCard = () => {
           <Box
             sx={{ position: "relative", display: "flex", alignItems: "center" }}
           >
-
             <IconButton
               sx={{ position: "absolute", left: 0, zIndex: 1 }}
               onClick={() => scrollLeft(foodScrollContainerRef1)}
@@ -402,10 +404,8 @@ const ProductCard = () => {
                 gap: 2,
                 padding: 2,
                 backgroundColor: "#f0f0f0",
-
               }}
             >
-
               {products.map((product) => (
                 <Card key={product.id} sx={{ minWidth: 300 }}>
                   <CardMedia
@@ -554,7 +554,8 @@ const ProductCard = () => {
                 width: 1500,
                 bgcolor: "background.paper",
                 boxShadow: 24,
-                height: 700,
+                maxHeight: "90vh",
+                overflowY: "auto", 
                 p: 4,
                 outline: 0,
               }}
@@ -574,7 +575,13 @@ const ProductCard = () => {
                 </IconButton>
               </Box>
               <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                <Box sx={{ width: "50%", display: "flex", justifyContent: "center" }}>
+                <Box
+                  sx={{
+                    width: "50%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
                   <img
                     src={`data:image/jpeg;base64,${selectedProduct.images[0]}`}
                     alt="mealbox"
@@ -582,13 +589,16 @@ const ProductCard = () => {
                       width: "100%",
                       height: "auto",
                       objectFit: "cover",
-                      maxHeight: "500px" // Ensures the image does not exceed a certain height
+                      maxHeight: "500px", // Ensures the image does not exceed a certain height
                     }}
                   />
                 </Box>
                 <Box sx={{ width: "50%" }}>
                   <Typography variant="h6">{`Price: ${selectedProduct.price}`}</Typography>
-                  <Typography variant="body1" sx={{ fontWeight: "bold", my: 2 }}>
+                  <Typography
+                    variant="body1"
+                    sx={{ fontWeight: "bold", my: 2 }}
+                  >
                     {selectedProduct.description}
                   </Typography>
                   <FormControl fullWidth sx={{ mb: 2 }}>
@@ -681,7 +691,6 @@ const ProductCard = () => {
             </Box>
           </Modal>
         )}
-
       </Box>
     </Box>
   );

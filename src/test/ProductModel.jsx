@@ -131,7 +131,7 @@ const ProductCard = () => {
                 </Select>
               </FormControl>
               <FormControl fullWidth sx={{ mb: 2 }}>
-                <InputLabel>MEAL PLAN</InputLabel>
+                <InputLabel>MEALS PLAN</InputLabel>
                 <Select value={mealPlan} onChange={handleMealPlanChange}>
                   <MenuItem value="Single Day">Single Day</MenuItem>
                 </Select>
@@ -143,6 +143,7 @@ const ProductCard = () => {
                 onChange={handleDateChange}
                 fullWidth
                 sx={{ mb: 2 }}
+                renderInput={(params) => <TextField {...params} fullWidth />}
                 InputLabelProps={{ shrink: true }}
               />
               <TextField
