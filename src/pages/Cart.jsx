@@ -1,6 +1,4 @@
-import React, { useContext } from "react";
-import { CartContext } from "./Cartcontext.js";
-// import "../styles/cart.css";
+import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import {
@@ -19,34 +17,104 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import axios from 'axios';
+import { removeFromCart, updateCartItemQuantity } from "../Redux/actions/CartActions.jsx";
+import { v4 as uuidv4 } from 'uuid';
+import Cookies from 'js-cookie';
 
 function Cart() {
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const dispatch = useDispatch();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const selectedAddress = useSelector((state) => state.address.selectedAddress);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const transactionId = uuidv4();
+
+
+  const updateQuantity = (index, amount) => {
+    const currentQuantity = parseInt(cartItems[index].mealQuantity); // Convert to integer
+    const newQuantity = currentQuantity + amount;
+    if (newQuantity > 0) {
+      dispatch(updateCartItemQuantity(index, newQuantity.toString())); // Convert back to string for Redux
+    }
+  };
+
+
+  const backgroundImage = "https://wallpapercave.com/wp/wp2800736.jpg";
+  const deleteItem = (index) => {
+    dispatch(removeFromCart(index));
+  };
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.mealQuantity,
     0
   );
 
-  const updateQuantity = (index, amount) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item, i) =>
-        i === index
-          ? { ...item, mealQuantity: parseInt(item.mealQuantity, 10) + amount }
-          : item
-      )
-    );
+
+  const proceedToPay = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
+    }
+
+    const orderPayload = {
+      address_details: selectedAddress,
+      item_details: cartItems.map((item) => ({
+        ProductId:item.productId,
+        ProductName: item.productName,
+        ProductQuantity: item.mealQuantity,
+        ProductPrice: item.price,
+        ProductTotalPrice: item.price * item.mealQuantity,
+        DateOfDelivery: item.selectedDeliveryDates,
+      })),
+      merchantTransactionId: transactionId,
+      payment_status: "Pending", // Hardcoded payment status
+      TotalPrice: subtotal, // Use the subtotal as total price
+    };
+    console.log(orderPayload, "orderPayload")
+
+    axios.post("http://localhost:9000/api/createOrder", orderPayload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        const orderId = response.data.id;
+
+        const paymentPayload = {
+          userId: response.data.userId,
+          amount: subtotal,
+          phonenumber: selectedAddress.contact_number,
+          merchantTransactionId: transactionId,
+        };
+
+        axios.post("http://localhost:9000/api/pay", paymentPayload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((paymentResponse) => {
+            localStorage.setItem('orderId', orderId);
+            localStorage.setItem('merchantTransactionId', transactionId);
+            // Cookies.set('orderId', orderId, { expires: 1 });  // Set orderId in cookies
+            // Cookies.set('merchantTransactionId', transactionId, { expires: 1 });  // Set merchantTransactionId in cookies
+            console.log("Payment initiated successfully:", paymentResponse.data);
+            const redirectUrl = paymentResponse.data.data.instrumentResponse.redirectInfo.url;
+            window.location.href = redirectUrl;
+          })
+          .catch((error) => {
+            console.error("Error initiating payment:", error);
+            // Handle payment initiation error
+          });
+      })
+      .catch((error) => {
+        console.error("Error creating order:", error);
+        // Handle order creation error
+      });
   };
 
-  const backgroundImage = "https://wallpapercave.com/wp/wp2800736.jpg";
-  const deleteItem = (index) => {
-    console.log("Deleting item at index", index);
-
-    setCartItems((prevItems) => prevItems.filter((item, i) => i !== index));
-  };
 
   return (
     <div>
@@ -134,18 +202,18 @@ function Cart() {
                             style={{
                               minWidth: "30px",
                               fontSize: "1rem",
-                              
+
                             }}
                             onClick={() => {
                               updateQuantity(index, -1);
-                              
+
                             }}
-                           variant="contained"
-                            color="primary" 
-                          > 
+                            variant="contained"
+                            color="primary"
+                          >
                             -
                           </Button>
-                          <span style={{ fontSize: "1rem" ,marginLeft:'5px'}}>
+                          <span style={{ fontSize: "1rem", marginLeft: '5px' }}>
                             {item.mealQuantity}
                           </span>
                           <Button
@@ -156,7 +224,7 @@ function Cart() {
                             }}
                             onClick={() => {
                               updateQuantity(index, 1);
-                              
+
                             }}
                             variant="contained"
                             color="primary"
@@ -241,6 +309,7 @@ function Cart() {
             </Box>
             <Box sx={{ mt: "16px" }}>
               <Button
+                onClick={proceedToPay}
                 variant="contained"
                 fullWidth
                 sx={{ marginTop: "16px", backgroundColor: "orange" }}
@@ -250,11 +319,11 @@ function Cart() {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ marginTop: "8px", backgroundColor: "red",  }}
+                sx={{ marginTop: "8px", backgroundColor: "red", }}
               >
                 <Link
                   href="/"
-                  sx={{color:'white', textDecoration:'none'}} 
+                  sx={{ color: 'white', textDecoration: 'none' }}
                 >
                   CONTINUE ORDERING
                 </Link>
@@ -263,6 +332,16 @@ function Cart() {
           </Box>
         </Box>
       </div>
+      {console.log(selectedAddress)}
+      {selectedAddress && (
+        <Box sx={{ padding: "20px", backgroundColor: "#f0f0f0" }}>
+          <Typography variant="h6" gutterBottom>
+            Delivery Address
+          </Typography>
+          <Typography variant="body1">{selectedAddress.full_address}</Typography>
+          <Typography variant="body2">{selectedAddress.nearby_location}, {selectedAddress.state}</Typography>
+        </Box>
+      )}
     </div>
   );
 }

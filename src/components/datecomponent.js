@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import '../supriya/date.css'
+import './date.css'
 import dayjs from "dayjs";
 
 function DateComponent({ onSelect }) {

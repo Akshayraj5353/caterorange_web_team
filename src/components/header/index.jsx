@@ -243,9 +243,11 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import Layout from '../Layout'
 import PrivateRoute from '../../Redux/PrivateRoute'
-import AddressSelector from '../AddressSlector'
-import Cart from '../supriya/Cart'
+import AddressSelector from '../Address/AddressSlector'
+import Cart from '../../pages/Cart'
 import { Link } from "react-router-dom";
+import Order from '../../pages/orderConformation';
+import OrderHistory from '../../pages/OrderHistory';
 
 const drawerWidth = 240;
 
@@ -304,8 +306,8 @@ export default function Header() {
         <AppBar position="absolute" >
           <Toolbar >
             <Typography
-              component={Link} 
-              to="/" 
+              component={Link}
+              to="/"
               // component="h1"
               variant="h6"
               color="inherit"
@@ -352,7 +354,7 @@ export default function Header() {
                   onClose={handleClose}
                 >
                   <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={() => navigate('/OrderHistory')}>Orders</MenuItem>
                 </Menu>
               </div>
             ) : (
@@ -380,7 +382,9 @@ export default function Header() {
           <Routes >
             <Route path='/' element={<Layout />} />
             <Route element={<PrivateRoute />}>
-              <Route path="/Cart" element={<Cart />} />
+              <Route path="/Cart" element={<Cart />} />Order
+              <Route path="/OrderConfirmation" element={<Order />} />OrderHistory
+              <Route path="/OrderHistory" element={<OrderHistory />} />
             </Route>
             {/* <Route path='/productmanagement' element={<Productmanagement />} />
             <Route path='/categorymanagement' element={<AddCategoryAndSubcategory />} />

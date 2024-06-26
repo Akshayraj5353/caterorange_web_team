@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Menu, MenuItem, ListItemText, Typography, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,16 +8,18 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import AddAddressForm from './AddAddressForm'; // Assuming you have this component
+import AddAddressForm from './AddAddressForm';
+import { setSelectedAddress } from '../../Redux/actions/addressActions';
 
 const AddressSelection = () => {
   const [addresses, setAddresses] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedAddress, setSelectedAddress] = useState('');
   const [openForm, setOpenForm] = useState(false);
   const [addressToEdit, setAddressToEdit] = useState(null);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState(null);
+  const dispatch = useDispatch();
+  const selectedAddress = useSelector((state) => state.address.selectedAddress);
   const token = useSelector((state) => state.authentication.token);
   const theme = useTheme();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ const AddressSelection = () => {
         },
       });
       setAddresses(response.data);
-      setSelectedAddress(response.data[0]?.full_address || '');
+      dispatch(setSelectedAddress(response.data[0]));
     } catch (error) {
       console.error('Error fetching addresses:', error);
     }
@@ -104,8 +106,8 @@ const AddressSelection = () => {
     }
   };
 
-  const handleSelectAddress = (fullAddress) => {
-    setSelectedAddress(fullAddress);
+  const handleSelectAddress = (address) => {
+    dispatch(setSelectedAddress(address));
     handleMenuClose();
   };
 
@@ -119,7 +121,7 @@ const AddressSelection = () => {
         endIcon={<ArrowDropDownIcon />}
       >
         <LocationOnIcon />
-        {selectedAddress || 'Select Address'}
+        {selectedAddress ? selectedAddress.full_address : 'Select Address'}
       </Button>
       <Menu
         id="address-menu"
@@ -141,7 +143,7 @@ const AddressSelection = () => {
         </MenuItem>
         {addresses.length > 0 ? (
           addresses.map((address) => (
-            <MenuItem key={address.id} onClick={() => handleSelectAddress(address.full_address)}>
+            <MenuItem key={address.id} onClick={() => handleSelectAddress(address)}>
               <ListItemText
                 primary={address.full_address}
                 secondary={`${address.nearby_location}, ${address.state}`}

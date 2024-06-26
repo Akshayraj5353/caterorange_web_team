@@ -16,7 +16,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
 import Alert from '@mui/material/Alert';
-import { login } from '../Redux/actions/authActions';
+import { login } from '../../Redux/actions/authActions';
 
 function Copyright(props) {
     return (

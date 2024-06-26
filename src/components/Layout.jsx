@@ -1,6 +1,6 @@
 import React from 'react'
 import Carousal from './Carousal'
-import ProductCard from '../components/supriya/Productscard'
+import ProductCard from './Productscard'
 
 function layout() {
   return (
