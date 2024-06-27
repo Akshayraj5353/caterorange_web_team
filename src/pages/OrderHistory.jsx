@@ -31,7 +31,7 @@ const OrderHistory = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setOrders(response.data.reverse());
+                setOrders(response.data.orders.reverse());
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching orders:', error);

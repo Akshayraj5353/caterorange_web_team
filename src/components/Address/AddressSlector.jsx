@@ -35,7 +35,7 @@ const AddressSelection = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setAddresses(response.data);
+      setAddresses(response.data.addresses);
       dispatch(setSelectedAddress(response.data[0]));
     } catch (error) {
       console.error('Error fetching addresses:', error);

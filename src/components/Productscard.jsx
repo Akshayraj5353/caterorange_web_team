@@ -110,7 +110,7 @@ const ProductCard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setProducts(response.data);
+        setProducts(response.data.products);
         const initialQuantities = response.data.reduce((acc, product) => {
           acc[product.id] = 1;
           return acc;
